@@ -39,19 +39,27 @@ class User {
 					$sort: { 'no': 1 }
 				},
 				{
-					$skip: 2
-				},
-				{
-					$limit: 1
-				},
-				{
 					$project: {
 						name: {
 							$concat: [ '$name', ' ', '$surname' ]
 						},
 						tasks: {
-							title: 1,
-							score: 1
+							$filter: {
+								input: {
+									$map: {
+										input: '$tasks',
+										as: 'task',
+										in: {
+											title: '$$task.title',
+											statement: '$$task.statement',
+											score: { $add: [ '$$task.score', 50 ] },
+											_id: '$$task._id'
+										}
+									}
+								},
+								as: 'task',
+								cond: { $gte: [ '$$task.score', 100 ] }
+							}
 						}
 
 					}
@@ -63,21 +71,16 @@ class User {
 					$sort: { 'tasks.score': 1 }
 				},
 				{
-					$match: {
-						'tasks.score': { $gte: 250 }
-					}
-				},
-				{
 					$group: {
 						_id: '$_id',
 						name: {
-							'$first': '$name'
-						},
-						tasks: {
-							$push: '$tasks'
+							$first: '$name'
 						},
 						total_score: {
 							$sum: '$tasks.score'
+						},
+						tasks: {
+							$push: '$tasks'
 						}
 					}
 				}
@@ -176,6 +179,36 @@ class User {
 				},
 				{
 					$unwind: '$name'
+				}
+			]);
+			return {
+				type: true,
+				message: 'basarili',
+				data: result
+			};
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
+	}
+	static async deneme(req) {
+		try {
+
+			const result = await db.get().model('users').aggregate([
+				{
+					$project: {
+						name: 1,
+						tasks: {
+							$filter: {
+								input: '$tasks',
+								cond: { $gte: [ '$$task.score', 10 ] },
+								as: 'task'
+							}
+						}
+					}
 				}
 			]);
 			return {

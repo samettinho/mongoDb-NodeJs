@@ -5,6 +5,7 @@ const app = express();
 
 app.get('/deparmentUser', UserController.deparmentUser);
 app.get('/dep', UserController.dep);
+app.get('/deneme', UserController.deneme);
 app.get('/', UserController.getAll);
 app.post('/', UserController.create);
 
