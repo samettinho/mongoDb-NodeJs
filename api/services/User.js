@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 
 import db from '../src/db';
 import dotenv from 'dotenv/config';
@@ -33,6 +34,9 @@ class User {
 	}
 	static async getAll(req) {
 		try {
+			// bütün task score alanlarına 50 ekleyip bunlardan 100 den büyük olanları getiriyor ve no 1 alanlarına göre sıralıyor.
+
+			//ardından taskları kendi aralarında score alanına göre küçükten büyüğe sıralıyor 
 
 			const result = await db.get().model('users').aggregate([
 				{
@@ -138,7 +142,7 @@ class User {
 	}
 	static async dep(req) {
 		try {
-
+			//department name ve user name alanlarını getiriyor
 			const result = await db.get().model('users').aggregate([
 				{
 					$lookup: {
@@ -196,7 +200,7 @@ class User {
 	}
 	static async deneme(req) {
 		try {
-
+			//task score u 10 dan büyük olanları getiriyor
 			const result = await db.get().model('users').aggregate([
 				{
 					$project: {
@@ -204,8 +208,8 @@ class User {
 						tasks: {
 							$filter: {
 								input: '$tasks',
-								cond: { $gte: [ '$$task.score', 10 ] },
-								as: 'task'
+								as: 'task',
+								cond: { $gte: [ '$$task.score', 10 ] }
 							}
 						}
 					}
