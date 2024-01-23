@@ -10,17 +10,18 @@ class UserTask {
 				{
 					$project: {
 						'_id': 0,
-						'tasks': '$tasks'
+						'tasks': 1
 					}
 				},
 				{
-					$unwind: '$tasks'
+					$unwind: {
+						path: '$tasks'
+					}
 				},
 				{
-					$group: {
-						_id: '$tasks._id',
-						title: { $first: '$tasks.title' },
-						statement: { $first: '$tasks.statement' }
+					$replaceRoot:
+					{
+						newRoot: '$tasks'
 					}
 				}
 			]);

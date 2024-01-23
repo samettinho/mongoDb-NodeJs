@@ -104,9 +104,6 @@ class Task {
 									foreignField: '_id',
 									as: 'company'
 								}
-							},
-							{
-								$unwind: '$company'
 							}
 						]
 					}

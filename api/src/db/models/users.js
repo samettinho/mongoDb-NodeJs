@@ -14,7 +14,8 @@ const userSchema = new Schema({
   } ],
   company_id: { type: Schema.Types.ObjectId, ref: 'companies', required: true },
   is_removed: { type: Boolean, default: false, required: true },
-  date: { type: Date, default: Date.now }
+  date: { type: Date, default: Date.now },
+  department_id: { type: Schema.Types.ObjectId, ref: 'departments', required: true }
 }, { collection: 'users' });
 
 module.exports = userSchema; 
