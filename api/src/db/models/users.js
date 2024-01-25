@@ -18,4 +18,6 @@ const userSchema = new Schema({
   department_id: { type: Schema.Types.ObjectId, ref: 'departments', required: true }
 }, { collection: 'users' });
 
+userSchema.index({ name: 1 });
+
 module.exports = userSchema; 

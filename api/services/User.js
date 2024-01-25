@@ -64,6 +64,9 @@ class User {
 								as: 'task',
 								cond: { $gte: [ '$$task.score', 100 ] }
 							}
+						},
+						task_count: {
+							$size: '$tasks'
 						}
 
 					}
@@ -85,6 +88,9 @@ class User {
 						},
 						tasks: {
 							$push: '$tasks'
+						},
+						task_count: {
+							$first: '$task_count'
 						}
 					}
 				}
