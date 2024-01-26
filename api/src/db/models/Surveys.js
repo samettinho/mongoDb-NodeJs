@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 const choiceSchema = new Schema({
   choice: { type: String, required: true },
+  point: { type: Number, required: true },
   date: { type: Date, default: Date.now },
   is_removed: { type: Boolean, default: false, required: true }
 });
