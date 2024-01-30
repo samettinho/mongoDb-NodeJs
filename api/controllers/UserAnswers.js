@@ -56,6 +56,32 @@ class UserAnswers {
 		}
 	}
 
+	static async delete(req, res) {
+		try {
+			const result = await UserAnswersService.delete(req);
+			if (!result.type) {
+				return res.json(Helpers.responseMessage(ResponseEnum.ERROR, result.message));
+			}
+			return res.json(Helpers.responseMessage(ResponseEnum.SUCCESS, result.message, result.data));
+		}
+		catch (error) {
+			return res.json(Helpers.responseMessage(ResponseEnum.ERROR, error.message));
+		}
+	}
+
+	static async choiceDelete(req, res) {
+		try {
+			const result = await UserAnswersService.choiceDelete(req);
+			if (!result.type) {
+				return res.json(Helpers.responseMessage(ResponseEnum.ERROR, result.message));
+			}
+			return res.json(Helpers.responseMessage(ResponseEnum.SUCCESS, result.message, result.data));
+		}
+		catch (error) {
+			return res.json(Helpers.responseMessage(ResponseEnum.ERROR, error.message));
+		}
+	}
+
 }
 
 export default UserAnswers;

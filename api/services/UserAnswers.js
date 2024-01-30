@@ -10,7 +10,7 @@ class UserAnswers {
 		try {
 			const result = await db.get().model('UserAnswers').create(req.body);
 			return {
-				type: false,
+				type: true,
 				message: 'basarılı',
 				data: result
 			};
@@ -31,8 +31,13 @@ class UserAnswers {
 			const result = await db.get().model('UserAnswers').aggregate([
 				{
 					$match: {
-						user_id: new ObjectId('65950c9416fd02529779fca8')
+						user_id: new ObjectId('65954e824bad802016f744ed'),
+						is_removed: false
 					}
+				},
+
+				{
+					$unwind: '$choices'
 				},
 				{
 					$lookup: {
@@ -57,7 +62,7 @@ class UserAnswers {
 				{
 					$match: {
 						$expr: {
-							$eq: [ '$choice_id', '$Survey.selections.questions.choices._id' ]
+							$eq: [ '$choices.choice_id', '$Survey.selections.questions.choices._id' ]
 						}
 					}
 				},
@@ -71,6 +76,12 @@ class UserAnswers {
 				},
 				{
 					$unwind: '$user'
+				},
+
+				{
+					$match: {
+						'choices.is_removed': false
+					}
 				},
 				{
 					$project: {
@@ -124,7 +135,8 @@ class UserAnswers {
 			const result = await db.get().model('UserAnswers').aggregate([
 				{
 					$match: {
-						user_id: new ObjectId(user_id)
+						user_id: new ObjectId(user_id),
+						is_removed: false
 					}
 				},
 				{
@@ -184,6 +196,58 @@ class UserAnswers {
 					}
 				}
 			]);
+			return {
+				type: true,
+				message: 'basarılı',
+				data: result
+			};
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
+	}
+
+	static async choiceDelete(req) {
+		try {
+			const user_id = new ObjectId(req.body.user_id);
+			const choice_id = new ObjectId(req.body.choice_id);
+			const result = await db.get().model('UserAnswers').updateOne(
+				{
+					user_id: new ObjectId(user_id),
+					'choices.choice_id': new ObjectId(choice_id)
+				},
+				{
+					$set: {
+						'$choices.is_removed': true
+					}
+				}
+			);
+			return {
+				type: true,
+				message: 'basarılı',
+				data: result
+			};
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
+	}
+
+	static async delete(req) {
+		try {
+			const user_id = new ObjectId(req.body.user_id);
+			const question_id = new ObjectId(req.body.question_id);
+			const result = await db.get().model('UserAnswers').updateOne({
+				user_id: new ObjectId(user_id),
+				question_id: new ObjectId(question_id),
+				is_removed: false
+			}, { is_removed: true });
 			return {
 				type: true,
 				message: 'basarılı',
