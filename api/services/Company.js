@@ -4,7 +4,6 @@ class Company {
 
 	static async getAll(req) {
 		try {
-			const { lang } = req.decoded;
 			const companies = await db.get().model('companies').aggregate([
 				{
 					$lookup: {

@@ -53,6 +53,18 @@ class UserTask {
 			return res.json(Helpers.responseMessage(ResponseEnum.ERROR, error.message));
 		}
 	}
+	static async get(req, res) {
+		try {
+			const result = await UserTaskService.get(req);
+			if (!result.type) {
+				return res.json(Helpers.responseMessage(ResponseEnum.ERROR, result.message));
+			}
+			return res.json(Helpers.responseMessage(ResponseEnum.SUCCESS, result.message, result.data));
+		}
+		catch (error) {
+			return res.json(Helpers.responseMessage(ResponseEnum.ERROR, error.message));
+		}
+	}
 
 }
 

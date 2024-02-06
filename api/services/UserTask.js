@@ -41,7 +41,7 @@ class UserTask {
 
 	static async addTask(req) {
 		try {
-			const task = req.body.data;
+			const task = req.body;
 			const user_id = req.params.id;
 
 			const taskCreate = await db.get().model('users').updateOne(
@@ -124,6 +124,33 @@ class UserTask {
 			return {
 				type: true,
 				message: 'başarılı',
+				data: result
+			};
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
+	}
+	static async get(req) {
+		try {
+			const user_id = req.params.id;
+			const result = await db.get().model('users').aggregate([
+				{
+					$match: { _id: new ObjectId(user_id) }
+				}
+			]);
+			if (result.length === 0) {
+				return {
+					type: false,
+					message: 'user bulunamadı'
+				};
+			}
+			return {
+				type: true,
+				message: 'basarili',
 				data: result
 			};
 		}

@@ -23,26 +23,11 @@ module.exports = [
         "title": "fener",
         "statement": "samet samet",
         "score": 200
-      },
-      {
-        "title": "bahce ",
-        "statement": "samet samet",
-        "score": 300
-      },
-      {
-        "title": "fener",
-        "statement": "samet samet",
-        "score": 150
-      },
-      {
-        "title": "bahce ",
-        "statement": "samet samet",
-        "score": 1000
       }
     ],
     "is_removed": false,
     "company_id": new objectId('65956ffc16fd02529779fcc5'),
-    "department_id": new objectId('65956ffc16fd02529779fcc5'),
+    "department_id": new objectId('65a7bdf4c897a1cc0413cad3'),
     "__v": 0,
     "no": 3
   }

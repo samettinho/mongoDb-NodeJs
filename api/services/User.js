@@ -22,7 +22,8 @@ class User {
 			const result = await db.get().model('users').create(body);
 			return {
 				type: true,
-				message: 'basarili'
+				message: 'basarili',
+				data: result
 			};
 		}
 		catch (error) {
@@ -111,17 +112,17 @@ class User {
 	}
 	static async deparmentUser(req) {
 		try {
-
+			const user_id = req.params.id;
 			const result = await db.get().model('users').aggregate([
 				{
 					$match: {
-						_id: new ObjectId('65950c9416fd02529779fca8')
+						_id: new ObjectId(user_id)
 					}
 				},
 				{
 					$lookup: {
 						from: 'departments',
-						localField: 'departments',
+						localField: 'department_id',
 						foreignField: '_id',
 						as: 'departments'
 					}
@@ -189,6 +190,9 @@ class User {
 				},
 				{
 					$unwind: '$name'
+				},
+				{
+					$sort: { 'name': 1 }
 				}
 			]);
 			return {
@@ -221,6 +225,33 @@ class User {
 					}
 				}
 			]);
+			return {
+				type: true,
+				message: 'basarili',
+				data: result
+			};
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
+	}
+	static async get(req) {
+		try {
+			const user_id = req.params.id;
+			const result = await db.get().model('users').aggregate([
+				{
+					$match: { _id: new ObjectId(user_id) }
+				}
+			]);
+			if (result.length === 0) {
+				return {
+					type: false,
+					message: 'user bulunamadı'
+				};
+			}
 			return {
 				type: true,
 				message: 'basarili',
