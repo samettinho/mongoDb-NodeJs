@@ -44,11 +44,42 @@ class Survey {
 
 	static async delete(req) {
 		try {
-			const survey_id = new ObjectId(req.body.survey_id);
+			const survey_id = new ObjectId(req.params.id);
 			const result = await db.get().model('Surveys').updateOne({
-				_id: new ObjectId(survey_id),
+				_id: survey_id,
 				is_removed: false
 			}, { is_removed: true });
+			return {
+				type: true,
+				message: 'basarılı',
+				data: result
+			};
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
+	}
+
+	static async get(req) {
+		try {
+			const survey_id = new ObjectId(req.params.id);
+			const result = await db.get().model('Surveys').aggregate([
+				{
+					$match: {
+						_id: survey_id,
+						is_removed: false
+					}
+				}
+			]);
+			if (result.length === 0) {
+				return {
+					type: false,
+					message: 'Anket bulunamadı.'
+				};
+			}
 			return {
 				type: true,
 				message: 'basarılı',

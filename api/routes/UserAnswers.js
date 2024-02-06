@@ -8,6 +8,7 @@ app.get('/', UserAnswersController.getAll);
 app.post('/delete', UserAnswersController.delete);
 app.post('/choiceDelete', UserAnswersController.choiceDelete);
 app.post('/update', UserAnswersController.update);
-app.post('/totalScore', UserAnswersController.totalScore);
+app.get('/totalScore/:id', UserAnswersController.totalScore);
+app.post('/getOne', UserAnswersController.get);
 
 module.exports = app;

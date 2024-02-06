@@ -4,7 +4,7 @@
   "description": "",
   "main": "api/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "set NODE_ENV=test&& node -r @babel/register ./api/src/seeders/index.js && mocha --require @babel/register ./api/test/index.js --timeout 10000 --exit",
     "start": "nodemon --exec babel-node api/index.js"
   },
   "keywords": [],
@@ -14,14 +14,18 @@
     "@babel/register": "^7.22.15",
     "babel": "^6.23.0",
     "body-parser": "^1.20.2",
+    "chai": "^4.3.4",
+    "chai-http": "^4.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "fs": "^0.0.1-security",
     "md5": "^2.3.0",
+    "mocha": "^10.2.0",
     "mongodb": "^6.3.0",
     "mongoose": "^8.0.3",
+    "node-fetch": "^2.6.1",
     "nodemon": "^3.0.1"
   },
   "devDependencies": {
@@ -32,7 +36,7 @@
     "@babel/plugin-transform-runtime": "^7.18.10",
     "@babel/preset-env": "^7.18.10",
     "@babel/register": "^7.18.9",
-    "@babel/runtime": "^7.18.9",
+    "@babel/runtime": "^7.7.2",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.1.0",

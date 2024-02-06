@@ -111,10 +111,12 @@ class UserAnswers {
 			const user_id = new ObjectId(req.body.user_id);
 			const question_id = new ObjectId(req.body.question_id);
 			const result = await db.get().model('UserAnswers').updateOne({
-				user_id: new ObjectId(user_id),
-				question_id: new ObjectId(question_id),
+				user_id: user_id,
+				question_id: question_id,
 				is_removed: false
-			}, req.body);
+			}, {
+				$set: req.body
+			});
 			return {
 				type: true,
 				message: 'basarılı',
@@ -131,11 +133,11 @@ class UserAnswers {
 
 	static async totalScore(req) {
 		try {
-			const user_id = new ObjectId(req.body.user_id);
+			const user_id = new ObjectId(req.params.id);
 			const result = await db.get().model('UserAnswers').aggregate([
 				{
 					$match: {
-						user_id: new ObjectId(user_id),
+						user_id: user_id,
 						is_removed: false
 					}
 				},
@@ -244,10 +246,57 @@ class UserAnswers {
 			const user_id = new ObjectId(req.body.user_id);
 			const question_id = new ObjectId(req.body.question_id);
 			const result = await db.get().model('UserAnswers').updateOne({
-				user_id: new ObjectId(user_id),
-				question_id: new ObjectId(question_id),
+				user_id: user_id,
+				question_id: question_id,
 				is_removed: false
-			}, { is_removed: true });
+			}, {
+				$set: {
+					is_removed: true,
+					'choices.0.is_removed': true
+				}
+			});
+			return {
+				type: true,
+				message: 'basarılı',
+				data: result
+			};
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
+	}
+
+	static async get(req) {
+		try {
+			const {
+				user_id,
+				choice_id } = req.body;
+			const result = await db.get().model('UserAnswers').aggregate([
+				{
+					$match: {
+						user_id: new ObjectId(user_id),
+						is_removed: false
+					}
+				},
+				{
+					$unwind: '$choices'
+				},
+				{
+					$match: {
+						'choices.choice_id': new ObjectId(choice_id),
+						'choices.is_removed': false
+					}
+				}
+			]);
+			if (result.length === 0) {
+				return {
+					type: false,
+					message: 'cevap bulunamadı.'
+				};
+			}
 			return {
 				type: true,
 				message: 'basarılı',

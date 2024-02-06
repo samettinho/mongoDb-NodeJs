@@ -5,6 +5,7 @@ const app = express();
 
 app.post('/', SurveyController.create);
 app.get('/', SurveyController.getAll);
-app.post('/', SurveyController.delete);
+app.delete('/:id', SurveyController.delete);
+app.get('/:id', SurveyController.get);
 
 module.exports = app;
